@@ -1,0 +1,197 @@
+/* Green Texture Background */
+body {
+    background-image:
+        radial-gradient(at 40% 20%, hsla(140, 100%, 93%, 1) 0px, transparent 50%),
+        radial-gradient(at 80% 0%, hsla(189, 100%, 96%, 1) 0px, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(341, 100%, 96%, 1) 0px, transparent 50%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.dark body {
+    background-image:
+        radial-gradient(at 40% 20%, hsla(140, 100%, 10%, 1) 0px, transparent 50%),
+        radial-gradient(at 80% 0%, hsla(189, 100%, 10%, 1) 0px, transparent 50%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #10B981;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #059669;
+}
+
+/* Ticket Styles */
+.ticket-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.ticket-card::before,
+.ticket-card::after {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    background-color: #f9fafb;
+    /* Match body bg */
+    border-radius: 50%;
+    top: 70%;
+    z-index: 10;
+}
+
+.dark .ticket-card::before,
+.dark .ticket-card::after {
+    background-color: #111827;
+    /* Match dark body bg */
+}
+
+.ticket-card::before {
+    left: -10px;
+}
+
+.ticket-card::after {
+    right: -10px;
+}
+
+.ticket-dashed-line {
+    border-top: 2px dashed #e5e7eb;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.dark .ticket-dashed-line {
+    border-color: #374151;
+}
+
+/* Selected Type Button */
+.type-btn.selected {
+    background-color: #ecfdf5;
+    border-color: #10B981;
+    color: #047857;
+}
+
+.dark .type-btn.selected {
+    background-color: #064e3b;
+    border-color: #10B981;
+    color: #ecfdf5;
+}
+
+/* Marquee Animation */
+.marquee-content {
+    animation: scroll 20s linear infinite;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* 3D Tilt Utilities */
+.transform-style-3d {
+    transform-style: preserve-3d;
+}
+
+.transform-translate-z-20 {
+    transform: translateZ(20px);
+}
+
+.transform-translate-z-10 {
+    transform: translateZ(10px);
+}
+
+/* Notification Toast */
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.notification-toast {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-left: 4px solid #10B981;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 320px;
+    max-width: 400px;
+    transform-origin: top right;
+    animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    pointer-events: auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .notification-toast {
+    background: rgba(17, 24, 39, 0.95);
+    color: #f3f4f6;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.notification-toast.error {
+    border-left-color: #EF4444;
+}
+
+.notification-toast.error i {
+    color: #EF4444;
+}
+
+.notification-toast.success {
+    border-left-color: #10B981;
+}
+
+.notification-toast.success i {
+    color: #10B981;
+}
+
+.notification-toast.info {
+    border-left-color: #3B82F6;
+}
+
+.notification-toast.info i {
+    color: #3B82F6;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(20px) scale(0.95);
+    }
+}

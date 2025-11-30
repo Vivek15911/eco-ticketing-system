@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTicket - Secure & Green Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#10B981',
+                        secondary: '#059669',
+                        dark: '#1F2937',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Vanilla Tilt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body
+    class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header
+        class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-primary/20">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
+                <i class="fa-solid fa-leaf text-primary text-2xl"></i>
+                <span class="text-xl font-bold tracking-tight">Eco<span class="text-primary">Ticket</span></span>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#" onclick="navigateTo('home')"
+                    class="hover:text-primary transition-colors font-medium">Home</a>
+
+                <!-- Auth Dependent Links -->
+                <div id="auth-links" class="flex items-center gap-6 hidden">
+                    <a href="#" onclick="navigateTo('create-ticket')"
+                        class="hover:text-primary transition-colors font-medium">Create Ticket</a>
+                    <a href="#" onclick="navigateTo('my-tickets')"
+                        class="hover:text-primary transition-colors font-medium">My Tickets</a>
+                    <a href="#" onclick="navigateTo('account')"
+                        class="hover:text-primary transition-colors font-medium">My Account</a>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()"
+                    class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline text-yellow-400"></i>
+                </button>
+
+                <!-- Login/Logout Button -->
+                <button id="login-btn" onclick="handleLogin()"
+                    class="bg-primary hover:bg-secondary text-white px-5 py-2 rounded-full font-medium transition-all shadow-lg shadow-primary/30 flex items-center gap-2">
+                    <i class="fa-brands fa-google"></i>
+                    <span>Sign in</span>
+                </button>
+                <div id="user-profile" class="hidden flex items-center gap-3 cursor-pointer"
+                    onclick="navigateTo('account')">
+                    <img id="user-avatar" src="" alt="User" class="w-9 h-9 rounded-full border-2 border-primary">
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 relative">
+
+        <!-- Home Page -->
+        <section id="home-page" class="page-section space-y-12">
+            <!-- Hero -->
+            <div class="text-center space-y-6 py-12">
+                <h1
+                    class="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-teal-500">
+                    Secure & Green Booking
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    Experience the most secure, eco-friendly ticket booking platform.
+                    Book for museums, theaters, sports, and more with instant QR code generation.
+                </p>
+
+                <!-- Marquee Scroller -->
+                <div class="relative overflow-hidden py-4 bg-primary/5 dark:bg-primary/10 border-y border-primary/10">
+                    <div class="marquee-content flex gap-8 whitespace-nowrap">
+                        <span class="text-lg font-bold text-primary"><i
+                                class="fa-solid fa-check-circle mr-2"></i>Instant Booking</span>
+                        <span class="text-lg font-bold text-primary"><i class="fa-solid fa-check-circle mr-2"></i>Secure
+                            Payments</span>
+                        <span class="text-lg font-bold text-primary"><i
+                                class="fa-solid fa-check-circle mr-2"></i>Eco-Friendly</span>
+                        <span class="text-lg font-bold text-primary"><i class="fa-solid fa-check-circle mr-2"></i>24/7
+                            Support</span>
+                        <span class="text-lg font-bold text-primary"><i class="fa-solid fa-check-circle mr-2"></i>Pan
+                            India Coverage</span>
+                        <span class="text-lg font-bold text-primary"><i
+                                class="fa-solid fa-check-circle mr-2"></i>Instant Booking</span>
+                        <span class="text-lg font-bold text-primary"><i class="fa-solid fa-check-circle mr-2"></i>Secure
+                            Payments</span>
+                        <span class="text-lg font-bold text-primary"><i
+                                class="fa-solid fa-check-circle mr-2"></i>Eco-Friendly</span>
+                        <span class="text-lg font-bold text-primary"><i class="fa-solid fa-check-circle mr-2"></i>24/7
+                            Support</span>
+                        <span class="text-lg font-bold text-primary"><i class="fa-solid fa-check-circle mr-2"></i>Pan
+                            India Coverage</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="grid md:grid-cols-3 gap-8">
+                <div data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2"
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 hover:border-primary transition-colors transform-style-3d">
+                    <div
+                        class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 transform-translate-z-20">
+                        <i class="fa-solid fa-shield-halved text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 transform-translate-z-10">Secure Booking</h3>
+                    <p class="text-gray-500 transform-translate-z-10">End-to-end encryption for all your personal data
+                        and transactions.</p>
+                </div>
+                <div data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2"
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 hover:border-primary transition-colors transform-style-3d">
+                    <div
+                        class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 transform-translate-z-20">
+                        <i class="fa-solid fa-leaf text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 transform-translate-z-10">Eco-Friendly</h3>
+                    <p class="text-gray-500 transform-translate-z-10">We contribute 1% of every booking to global
+                        reforestation projects.</p>
+                </div>
+                <div data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2"
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 hover:border-primary transition-colors transform-style-3d">
+                    <div
+                        class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 transform-translate-z-20">
+                        <i class="fa-solid fa-bolt text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 transform-translate-z-10">Instant Access</h3>
+                    <p class="text-gray-500 transform-translate-z-10">Get your QR code ticket instantly via email and
+                        SMS.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Ticket Page -->
+        <section id="create-ticket-page" class="page-section hidden max-w-4xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2">Book Your Ticket</h2>
+                <p class="text-gray-500">Fill in the details below to generate your pass.</p>
+            </div>
+
+            <div
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+                <div class="bg-primary p-4 text-white text-center">
+                    <p class="font-medium"><i class="fa-solid fa-ticket mr-2"></i>New Booking</p>
+                </div>
+                <form id="booking-form" onsubmit="handleBooking(event)" class="p-8 space-y-6">
+                    <!-- Ticket Type -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Booking Type</label>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                            <button type="button" onclick="selectType(this, 'Library')"
+                                class="type-btn p-3 border rounded-xl text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:ring-2 ring-primary">
+                                <i class="fa-solid fa-book mb-1 block text-lg"></i> Library
+                            </button>
+                            <button type="button" onclick="selectType(this, 'Sports')"
+                                class="type-btn p-3 border rounded-xl text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:ring-2 ring-primary">
+                                <i class="fa-solid fa-futbol mb-1 block text-lg"></i> Sports
+                            </button>
+                            <button type="button" onclick="selectType(this, 'Museum')"
+                                class="type-btn p-3 border rounded-xl text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:ring-2 ring-primary">
+                                <i class="fa-solid fa-building-columns mb-1 block text-lg"></i> Museum
+                            </button>
+                            <button type="button" onclick="selectType(this, 'Theater')"
+                                class="type-btn p-3 border rounded-xl text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:ring-2 ring-primary">
+                                <i class="fa-solid fa-masks-theater mb-1 block text-lg"></i> Theater
+                            </button>
+                            <button type="button" onclick="selectType(this, 'Room Rent')"
+                                class="type-btn p-3 border rounded-xl text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:ring-2 ring-primary">
+                                <i class="fa-solid fa-bed mb-1 block text-lg"></i> Room
+                            </button>
+                        </div>
+                        <input type="hidden" id="ticket-type" required>
+                    </div>
+
+                    <!-- Personal Info -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Full Name</label>
+                            <input type="text" id="name" required
+                                class="w-full px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email</label>
+                            <input type="email" id="email" required
+                                class="w-full px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Phone Number</label>
+                            <input type="tel" id="phone" required
+                                class="w-full px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Date</label>
+                            <input type="date" id="date" required
+                                class="w-full px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">State</label>
+                            <select id="state-select" onchange="updatePlaces()" required
+                                class="w-full px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                                <option value="">Select State</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Venue</label>
+                            <select id="place-select" required
+                                class="w-full px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                                <option value="">Select State First</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Theater Specific Options -->
+                    <div id="theater-options" class="hidden space-y-4">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Seat Area</label>
+                                <select id="seat-area" onchange="updateSeatValidation()"
+                                    class="w-full px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                                    <option value="">Select Area</option>
+                                    <option value="Front">Front (Seats 1-100)</option>
+                                    <option value="Middle">Middle (Seats 101-200)</option>
+                                    <option value="Back">Back (Seats 201-300)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Seat Number</label>
+                                <input type="number" id="seat-number" placeholder="Enter Seat Number"
+                                    class="w-full px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                                <p id="seat-hint" class="text-xs text-gray-500 mt-1"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Room Rent Specific Options -->
+                    <div id="room-options" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Bed Type</label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="bed-type" value="Single" onchange="updateRooms()"
+                                        class="text-primary focus:ring-primary">
+                                    <span>Single Bed</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="bed-type" value="Double" onchange="updateRooms()"
+                                        class="text-primary focus:ring-primary">
+                                    <span>Double Bed</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Select Room</label>
+                            <select id="room-select"
+                                class="w-full px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                                <option value="">Select Bed Type First</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Hours (Conditional) -->
+                    <div id="hours-container" class="hidden">
+                        <label class="block text-sm font-medium mb-2">Duration (Hours)</label>
+                        <input type="number" id="hours"
+                            class="w-full px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                        <p id="hours-hint" class="text-xs text-gray-500 mt-1"></p>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-primary hover:bg-secondary text-white font-bold py-3 rounded-xl shadow-lg transition-transform active:scale-95">
+                        Confirm Booking
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- My Tickets Page -->
+        <section id="my-tickets-page" class="page-section hidden">
+            <h2 class="text-3xl font-bold mb-8">My Tickets</h2>
+            <div id="tickets-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Tickets will be injected here -->
+                <div class="text-center col-span-full text-gray-500 py-12">
+                    <i class="fa-regular fa-ticket text-4xl mb-4"></i>
+                    <p>No tickets booked yet.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Account Page -->
+        <section id="account-page" class="page-section hidden max-w-md mx-auto">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center">
+                <img id="account-avatar" src="" alt="Profile"
+                    class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-primary">
+                <h2 id="account-name" class="text-2xl font-bold mb-1">User Name</h2>
+                <p id="account-email" class="text-gray-500 mb-6">user@example.com</p>
+
+                <div class="space-y-3">
+                    <button
+                        class="w-full py-2 px-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-gear"></i> Settings
+                    </button>
+                    <button
+                        class="w-full py-2 px-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-circle-question"></i> Help & Support
+                    </button>
+                    <button onclick="handleLogout()"
+                        class="w-full py-2 px-4 bg-red-50 text-red-600 border border-red-100 rounded-lg hover:bg-red-100 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 mt-12">
+        <div class="container mx-auto px-4 text-center text-gray-500">
+            <p>&copy; 2025 EcoTicket. All rights reserved.</p>
+            <p class="text-sm mt-2">Made with <i class="fa-solid fa-heart text-red-500"></i> for Green Earth.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="login-modal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-[100]">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md transform transition-all scale-100">
+
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-brands fa-google text-3xl text-primary"></i>
+                </div>
+                <h2 class="text-2xl font-bold">Sign in with Google</h2>
+                <p class="text-gray-500 text-sm mt-1">Enter your details or use Google Account</p>
+            </div>
+
+            <!-- Google Button -->
+            <div id="g_id_onload"
+                data-client_id="866859350015-7brjj4gavdtf1h7u8c119tri5g5956sk.apps.googleusercontent.com"
+                data-callback="handleCredentialResponse" data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin mb-6 flex justify-center" data-type="standard" data-size="large"
+                data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left">
+            </div>
+
+            <div class="relative mb-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">Or continue manually</span>
+                </div>
+            </div>
+
+            <form onsubmit="processLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Email Address</label>
+                    <input type="email" id="login-email" required placeholder="name@example.com"
+                        class="w-full px-4 py-3 rounded-xl border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Full Name</label>
+                    <input type="text" id="login-name" required placeholder="John Doe"
+                        class="w-full px-4 py-3 rounded-xl border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                </div>
+
+                <div class="flex gap-3 mt-6">
+                    <button type="button" onclick="closeLoginModal()"
+                        class="flex-1 py-3 rounded-xl border hover:bg-gray-50 dark:hover:bg-gray-700 font-medium">Cancel</button>
+                    <button type="submit"
+                        class="flex-1 py-3 rounded-xl bg-primary hover:bg-secondary text-white font-bold shadow-lg shadow-primary/30">Sign
+                        In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</body>
+
+</html>
