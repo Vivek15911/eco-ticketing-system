@@ -287,12 +287,29 @@ function updateAuthUI() {
     const accountAvatar = document.getElementById('account-avatar');
     const navAvatar = document.getElementById('user-avatar');
 
+    // Mobile Elements
+    const mobileLoginBtn = document.getElementById('mobile-login-btn');
+    const mobileUserProfile = document.getElementById('mobile-user-profile');
+    const mobileAuthLinks = document.getElementById('mobile-auth-links');
+    const mobileUserAvatar = document.getElementById('mobile-user-avatar');
+    const mobileUserName = document.getElementById('mobile-user-name');
+
     if (currentUser) {
+        // Desktop
         loginBtn.classList.add('hidden');
         userProfile.classList.remove('hidden');
         authLinks.classList.remove('hidden');
-
         navAvatar.src = currentUser.avatar;
+
+        // Mobile
+        if (mobileLoginBtn) mobileLoginBtn.classList.add('hidden');
+        if (mobileUserProfile) mobileUserProfile.classList.remove('hidden');
+        if (mobileAuthLinks) mobileAuthLinks.classList.remove('hidden');
+        if (mobileAuthLinks) mobileAuthLinks.classList.add('flex');
+        if (mobileUserAvatar) mobileUserAvatar.src = currentUser.avatar;
+        if (mobileUserName) mobileUserName.textContent = currentUser.name;
+
+        // Account Page
         accountAvatar.src = currentUser.avatar;
         accountName.textContent = currentUser.name;
         accountEmail.textContent = currentUser.email;
@@ -301,9 +318,32 @@ function updateAuthUI() {
         document.getElementById('name').value = currentUser.name;
         document.getElementById('email').value = currentUser.email;
     } else {
+        // Desktop
         loginBtn.classList.remove('hidden');
         userProfile.classList.add('hidden');
         authLinks.classList.add('hidden');
+
+        // Mobile
+        if (mobileLoginBtn) mobileLoginBtn.classList.remove('hidden');
+        if (mobileUserProfile) mobileUserProfile.classList.add('hidden');
+        if (mobileAuthLinks) mobileAuthLinks.classList.add('hidden');
+        if (mobileAuthLinks) mobileAuthLinks.classList.remove('flex');
+    }
+}
+
+// --- Mobile Menu ---
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+
+    if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-xmark');
+    } else {
+        menu.classList.add('hidden');
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
     }
 }
 

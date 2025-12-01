@@ -195,3 +195,19 @@ body {
         transform: translateX(20px) scale(0.95);
     }
 }
+
+@media (max-width: 640px) {
+    #notification-container {
+        top: auto;
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        align-items: center;
+    }
+
+    .notification-toast {
+        min-width: auto;
+        width: 100%;
+        max-width: 100%;
+    }
+}

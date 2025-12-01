@@ -42,7 +42,7 @@
                 <span class="text-xl font-bold tracking-tight">Eco<span class="text-primary">Ticket</span></span>
             </div>
 
-            <!-- Navigation -->
+            <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center gap-6">
                 <a href="#" onclick="navigateTo('home')"
                     class="hover:text-primary transition-colors font-medium">Home</a>
@@ -75,6 +75,60 @@
                     <img id="user-avatar" src="" alt="User" class="w-9 h-9 rounded-full border-2 border-primary">
                 </div>
             </nav>
+
+            <!-- Mobile Menu Button -->
+            <button onclick="toggleMobileMenu()"
+                class="md:hidden text-2xl text-gray-600 dark:text-gray-300 focus:outline-none">
+                <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 absolute w-full left-0 shadow-lg z-40">
+            <div class="flex flex-col p-4 space-y-4">
+                <a href="#" onclick="navigateTo('home'); toggleMobileMenu()"
+                    class="hover:text-primary transition-colors font-medium block py-2">Home</a>
+
+                <!-- Mobile Auth Dependent Links -->
+                <div id="mobile-auth-links" class="hidden flex-col space-y-4">
+                    <a href="#" onclick="navigateTo('create-ticket'); toggleMobileMenu()"
+                        class="hover:text-primary transition-colors font-medium block py-2">Create Ticket</a>
+                    <a href="#" onclick="navigateTo('my-tickets'); toggleMobileMenu()"
+                        class="hover:text-primary transition-colors font-medium block py-2">My Tickets</a>
+                    <a href="#" onclick="navigateTo('account'); toggleMobileMenu()"
+                        class="hover:text-primary transition-colors font-medium block py-2">My Account</a>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <span class="text-sm text-gray-500">Theme</span>
+                    <button onclick="toggleTheme()"
+                        class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:inline text-yellow-400"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Login/Profile -->
+                <div class="pt-2">
+                    <button id="mobile-login-btn" onclick="handleLogin(); toggleMobileMenu()"
+                        class="w-full bg-primary hover:bg-secondary text-white px-5 py-3 rounded-xl font-medium transition-all shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-google"></i>
+                        <span>Sign in</span>
+                    </button>
+
+                    <div id="mobile-user-profile"
+                        class="hidden flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                        onclick="navigateTo('account'); toggleMobileMenu()">
+                        <img id="mobile-user-avatar" src="" alt="User"
+                            class="w-10 h-10 rounded-full border-2 border-primary">
+                        <div>
+                            <p id="mobile-user-name" class="font-bold text-sm">User Name</p>
+                            <p class="text-xs text-gray-500">View Profile</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -86,7 +140,7 @@
             <!-- Hero -->
             <div class="text-center space-y-6 py-12">
                 <h1
-                    class="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-teal-500">
+                    class="text-4xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-teal-500">
                     Secure & Green Booking
                 </h1>
                 <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
