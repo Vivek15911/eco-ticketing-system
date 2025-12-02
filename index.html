@@ -53,6 +53,8 @@
                         class="hover:text-primary transition-colors font-medium">Create Ticket</a>
                     <a href="#" onclick="navigateTo('my-tickets')"
                         class="hover:text-primary transition-colors font-medium">My Tickets</a>
+                    <a href="#" onclick="navigateTo('chat-bot')"
+                        class="hover:text-primary transition-colors font-medium">Chat Bot</a>
                     <a href="#" onclick="navigateTo('account')"
                         class="hover:text-primary transition-colors font-medium">My Account</a>
                 </div>
@@ -96,6 +98,8 @@
                         class="hover:text-primary transition-colors font-medium block py-2">Create Ticket</a>
                     <a href="#" onclick="navigateTo('my-tickets'); toggleMobileMenu()"
                         class="hover:text-primary transition-colors font-medium block py-2">My Tickets</a>
+                    <a href="#" onclick="navigateTo('chat-bot'); toggleMobileMenu()"
+                        class="hover:text-primary transition-colors font-medium block py-2">Chat Bot</a>
                     <a href="#" onclick="navigateTo('account'); toggleMobileMenu()"
                         class="hover:text-primary transition-colors font-medium block py-2">My Account</a>
                 </div>
@@ -390,6 +394,51 @@
                         class="w-full py-2 px-4 bg-red-50 text-red-600 border border-red-100 rounded-lg hover:bg-red-100 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-right-from-bracket"></i> Sign Out
                     </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Bot Page -->
+        <section id="chat-bot-page" class="page-section hidden max-w-2xl mx-auto">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 flex flex-col h-[600px]">
+                <!-- Header -->
+                <div class="bg-primary p-4 text-white flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-robot text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold">EcoTicket Assistant</h3>
+                        <p class="text-xs text-green-100 flex items-center gap-1"><span
+                                class="w-2 h-2 bg-green-300 rounded-full animate-pulse"></span> Online</p>
+                    </div>
+                </div>
+
+                <!-- Chat Area -->
+                <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-50 dark:bg-gray-900">
+                    <!-- Welcome Message -->
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-robot text-primary text-sm"></i>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-gray-800 p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 dark:border-gray-700 max-w-[80%]">
+                            <p class="text-sm">Hello! I'm your EcoTicket Assistant. How can I help you with your booking
+                                today?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+                    <form onsubmit="handleChatSubmit(event)" class="flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Type your message..."
+                            class="flex-grow px-4 py-2 rounded-xl border dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                        <button type="submit"
+                            class="bg-primary hover:bg-secondary text-white w-10 h-10 rounded-xl flex items-center justify-center transition-colors">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </section>

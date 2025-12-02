@@ -681,3 +681,259 @@ function showNotification(message, type = 'info') {
         }, 400);
     }, 4500);
 }
+
+// --- Chat Bot Logic ---
+function handleChatSubmit(e) {
+    e.preventDefault();
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+
+    // Add User Message
+    addMessage(message, 'user');
+    input.value = '';
+
+    // Simulate Bot Response
+    setTimeout(() => {
+        const response = getBotResponse(message);
+        if (typeof response === 'object' && response.type === 'form') {
+            addMessage(response.content, 'bot', true);
+            // Initialize form logic after insertion
+            if (response.init) response.init();
+        } else {
+            addMessage(response, 'bot');
+        }
+    }, 1000);
+}
+
+function addMessage(content, sender, isHtml = false) {
+    const container = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = `flex items-start gap-3 ${sender === 'user' ? 'flex-row-reverse' : ''}`;
+
+    const avatar = sender === 'bot'
+        ? `<div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-robot text-primary text-sm"></i></div>`
+        : `<div class="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user text-gray-500 text-sm"></i></div>`;
+
+    let bubbleContent = isHtml ? content : `<p class="text-sm">${content}</p>`;
+
+    const bubble = `
+        <div class="${sender === 'bot' ? 'bg-white dark:bg-gray-800 rounded-tl-none' : 'bg-primary text-white rounded-tr-none'} p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 max-w-[85%]">
+            ${bubbleContent}
+        </div>
+    `;
+
+    div.innerHTML = avatar + bubble;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
+
+function getBotResponse(message) {
+    const lowerMsg = message.toLowerCase();
+
+    if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) return "Hello! How can I help you today?";
+
+    if (lowerMsg.includes('ticket') || lowerMsg.includes('book') || lowerMsg.includes('form')) {
+        return {
+            type: 'form',
+            content: renderChatBookingForm(),
+            init: () => {
+                // Populate States in Chat Form
+                const stateSelect = document.getElementById('chat-state');
+                Object.keys(indianStates).sort().forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    stateSelect.appendChild(option);
+                });
+
+                // Set Date Constraints
+                const dateInput = document.getElementById('chat-date');
+                const today = new Date();
+                const maxDate = new Date();
+                maxDate.setDate(today.getDate() + 7);
+
+                const formatDate = (date) => {
+                    const d = new Date(date);
+                    let month = '' + (d.getMonth() + 1);
+                    let day = '' + d.getDate();
+                    const year = d.getFullYear();
+                    if (month.length < 2) month = '0' + month;
+                    if (day.length < 2) day = '0' + day;
+                    return [year, month, day].join('-');
+                };
+                dateInput.min = formatDate(today);
+                dateInput.max = formatDate(maxDate);
+
+                // Pre-fill Name/Email if logged in
+                if (currentUser) {
+                    document.getElementById('chat-name').value = currentUser.name;
+                    document.getElementById('chat-email').value = currentUser.email;
+                }
+            }
+        };
+    }
+
+    if (lowerMsg.includes('price') || lowerMsg.includes('cost')) return "Ticket prices vary by venue and event type. Please check the specific venue details.";
+    if (lowerMsg.includes('refund') || lowerMsg.includes('cancel')) return "For refunds and cancellations, please contact our support team at support@ecoticket.com.";
+
+    return "I'm sorry, I didn't quite catch that. Could you please rephrase?";
+}
+
+function renderChatBookingForm() {
+    return `
+        <div class="space-y-3 min-w-[250px]">
+            <p class="font-bold text-sm mb-2 text-primary">Quick Booking</p>
+            <form onsubmit="handleChatBooking(event)" class="space-y-3">
+                <input type="text" id="chat-name" placeholder="Full Name" required class="w-full p-2 text-xs rounded border dark:bg-gray-700 dark:border-gray-600 outline-none">
+                <input type="email" id="chat-email" placeholder="Email Address" required class="w-full p-2 text-xs rounded border dark:bg-gray-700 dark:border-gray-600 outline-none">
+
+                <select id="chat-type" onchange="toggleChatFields()" required class="w-full p-2 text-xs rounded border dark:bg-gray-700 dark:border-gray-600 outline-none">
+                    <option value="">Select Type</option>
+                    <option value="Library">Library</option>
+                    <option value="Museum">Museum</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Theater">Theater</option>
+                    <option value="Room Rent">Room Rent</option>
+                </select>
+                
+                <select id="chat-state" onchange="updateChatPlaces()" required class="w-full p-2 text-xs rounded border dark:bg-gray-700 dark:border-gray-600 outline-none">
+                    <option value="">Select State</option>
+                </select>
+                
+                <select id="chat-venue" required class="w-full p-2 text-xs rounded border dark:bg-gray-700 dark:border-gray-600 outline-none">
+                    <option value="">Select State First</option>
+                </select>
+                
+                <input type="date" id="chat-date" required class="w-full p-2 text-xs rounded border dark:bg-gray-700 dark:border-gray-600 outline-none">
+                
+                <!-- Dynamic Fields -->
+                <div id="chat-sports-options" class="hidden">
+                    <input type="number" id="chat-hours" placeholder="Duration (Hours)" min="1" max="6" class="w-full p-2 text-xs rounded border dark:bg-gray-700 dark:border-gray-600 outline-none">
+                </div>
+
+                <div id="chat-theater-options" class="hidden">
+                     <select id="chat-seat-area" class="w-full p-2 text-xs rounded border dark:bg-gray-700 dark:border-gray-600 outline-none mb-2">
+                        <option value="">Select Area</option>
+                        <option value="Front">Front</option>
+                        <option value="Middle">Middle</option>
+                        <option value="Back">Back</option>
+                    </select>
+                    <input type="number" id="chat-seat-number" placeholder="Seat Number" class="w-full p-2 text-xs rounded border dark:bg-gray-700 dark:border-gray-600 outline-none">
+                </div>
+
+                <div id="chat-room-options" class="hidden space-y-2">
+                    <div class="flex gap-2 text-xs">
+                        <label class="flex items-center gap-1"><input type="radio" name="chat-bed-type" value="Single"> Single</label>
+                        <label class="flex items-center gap-1"><input type="radio" name="chat-bed-type" value="Double"> Double</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-primary hover:bg-secondary text-white text-xs font-bold py-2 rounded transition-colors">
+                    Book Now
+                </button>
+            </form>
+        </div>
+    `;
+}
+
+function toggleChatFields() {
+    const type = document.getElementById('chat-type').value;
+    document.getElementById('chat-sports-options').classList.add('hidden');
+    document.getElementById('chat-theater-options').classList.add('hidden');
+    document.getElementById('chat-room-options').classList.add('hidden');
+
+    document.getElementById('chat-hours').required = false;
+    document.getElementById('chat-seat-area').required = false;
+    document.getElementById('chat-seat-number').required = false;
+
+    if (type === 'Sports') {
+        document.getElementById('chat-sports-options').classList.remove('hidden');
+        document.getElementById('chat-hours').required = true;
+    } else if (type === 'Theater') {
+        document.getElementById('chat-theater-options').classList.remove('hidden');
+        document.getElementById('chat-seat-area').required = true;
+        document.getElementById('chat-seat-number').required = true;
+    } else if (type === 'Room Rent') {
+        document.getElementById('chat-room-options').classList.remove('hidden');
+    }
+
+    updateChatPlaces();
+}
+
+function updateChatPlaces() {
+    const state = document.getElementById('chat-state').value;
+    const type = document.getElementById('chat-type').value;
+    const placeSelect = document.getElementById('chat-venue');
+
+    placeSelect.innerHTML = '<option value="">Select Venue</option>';
+
+    if (state) {
+        // Use existing getVenues logic, defaulting type to 'Library' if not selected to show something
+        const venues = getVenues(state, type || 'Library');
+        venues.forEach(venue => {
+            const option = document.createElement('option');
+            option.value = venue;
+            option.textContent = venue;
+            placeSelect.appendChild(option);
+        });
+    }
+}
+
+function handleChatBooking(e) {
+    e.preventDefault();
+
+    // Allow booking without login if name/email provided? 
+    // The prompt implies "give option email, name", so we should use those.
+    // If not logged in, we use the form values.
+
+    const name = document.getElementById('chat-name').value;
+    const email = document.getElementById('chat-email').value;
+    const type = document.getElementById('chat-type').value;
+    const state = document.getElementById('chat-state').value;
+    const venue = document.getElementById('chat-venue').value;
+    const date = document.getElementById('chat-date').value;
+
+    let hours = 'N/A';
+    let seat = 'N/A';
+    let bed = 'N/A';
+    let room = 'N/A'; // Auto-assign room for chat booking simplicity or add field? 
+    // Prompt asked for "single bed, double bed", didn't explicitly ask for room selection dropdown.
+    // I'll auto-assign a random room number for simplicity or leave as N/A. 
+    // Let's auto-assign a random room number if Room Rent.
+
+    if (type === 'Sports') {
+        hours = document.getElementById('chat-hours').value;
+    } else if (type === 'Theater') {
+        seat = `${document.getElementById('chat-seat-area').value} - ${document.getElementById('chat-seat-number').value}`;
+    } else if (type === 'Room Rent') {
+        bed = document.querySelector('input[name="chat-bed-type"]:checked')?.value || 'Single';
+        room = Math.floor(Math.random() * 100) + 100; // Random room
+    }
+
+    const ticket = {
+        id: 'TKT-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+        type: type,
+        name: name,
+        email: email,
+        phone: "N/A (Chat Booking)",
+        date: date,
+        state: state,
+        place: venue,
+        hours: hours,
+        room: room,
+        bed: bed,
+        seat: seat,
+        timestamp: new Date().toISOString()
+    };
+
+    tickets.push(ticket);
+    saveTickets();
+
+    // Show success in chat
+    const container = document.getElementById('chat-messages');
+    addMessage(`✅ Ticket Booked Successfully!<br>ID: <b>${ticket.id}</b><br>Venue: ${venue}<br>Sent to: ${email}`, 'bot', true);
+
+    // Also update main UI if needed
+    renderTickets();
+}
